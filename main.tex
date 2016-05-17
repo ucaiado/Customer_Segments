@@ -58,7 +58,10 @@ each.
 
 \section{Data Exploration}
 \label{sec:data_exploration}
-In this section, I will begin exploring the data to understand how each feature is related to each others. The six labels explored are continuous and are related to the annual spending on diverse product categories. They are all expressed in in monetary units. The features are:
+In this section, I will begin exploring the data to understand how each feature is related to each others.
+
+\subsection{Basic Statistics}
+The six labels explored are continuous and are related to the annual spending on diverse product categories. They are all expressed in in monetary units. The features are:
 \begin{itemize}
 \item FRESH: fresh products
 \item MILK: milk products
@@ -73,7 +76,7 @@ In the Table \ref{tab:basicfacts} below can be observed a statistical descriptio
 \begin{table}[ht!]
 \centering
 \begin{tabular}{l|rrrrrr}
-{} &      Fresh &      Milk &   Grocery &    Frozen & Detergents\_Paper & Delicatessen \\\hline
+{} &      Fresh &      Milk &   Grocery &    Frozen & Deter. Papr. & Delicatss. \\\hline
 count &     440.00 &    440.00 &    440.00 &    440.00 &           440.00 &       440.00 \\
 mean  &   12000.30 &   5796.27 &   7951.28 &   3071.93 &          2881.49 &      1524.87 \\
 std   &   12647.33 &   7380.38 &   9503.16 &   4854.67 &          4767.85 &      2820.11 \\
@@ -87,13 +90,13 @@ max   &  112151.00 &  73498.00 &  92780.00 &  60869.00 &         40827.00 &     
 \caption{\label{tab:basicfacts}Statistics About The Dataset.}
 \end{table}
 
-
-To get a better understanding of the customers and how their data will transform through the analysis, in the Table \ref{tab:basicfacts} I selected a few sample data points and plotted a boxplot comparing them with the distribution of each feature.
+\subsection{Selecting Samples}
+To get a better understanding of the customers and how their data will transform through the analysis, in the Table \ref{tab:sample} I selected a few sample data points and plotted a boxplot in Figure \ref{fig:boxplot} comparing them with the distribution of each feature.
 
 \begin{table}[ht!]
 \centering
 \begin{tabular}{l|rrrrrr}
-{} &    Fresh &     Milk &  Grocery &    Frozen & Detergents\_Paper & Delicatessen \\\hline
+{ID} &    Fresh &     Milk &  Grocery &    Frozen & Detergents & Delicatessen \\\hline
 1   &  7057.00 &  9810.00 &  9568.00 &   1762.00 &          3293.00 &      1776.00 \\
 271 &  2083.00 &  5007.00 &  1563.00 &   1120.00 &           147.00 &      1550.00 \\
 413 &  4983.00 &  4859.00 &  6633.00 &  17866.00 &           912.00 &      2435.00 \\
@@ -104,16 +107,24 @@ To get a better understanding of the customers and how their data will transform
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=0.75\textwidth]{figures/boxplot_features.png}
+\includegraphics[width=0.85\textwidth]{figures/boxplot_features.png}
 \caption{\label{fig:boxplot}Distribution Of The Features}
 \end{figure}
 
 
-Usually data expressed in money, as wealth, expenses, income and so on, are very [skewed](https://en.wikipedia.org/wiki/Skewness). As can be seen above, this dataset is not different. The box shows the quartiles of the dataset while the whiskers extend to show the rest of the distribution. There are some customers who spend much more than the median, while the most of them spend around the same level (the data inside the box comprehend 50% of the dataset).
+Usually data expressed in money, as wealth, expenses, income and so on, are very skewed\footnote{Source: \url{https://en.wikipedia.org/wiki/Skewness}}. As can be seen above, this dataset is not different. The box shows the quartiles of the dataset while the whiskers extend to show the rest of the distribution. There are some customers who spend much more than the median, while the most of them spend around the same level (the data inside the box comprehend 50% of the dataset).
 
 The data point 271 spent less than 75\% of the other customers (lower quartile) in three product categories: Fresh, Groceries and detergent papers. On the another hand, it spent above the median in products relates to Milk. It could be a small coffee shop, for example. The customer $1$ could be a hotel, as it spent above or expressively above the mean in all product categories, except by Fresh. The last customer selected, 413, has spent at the fourth quartile of the distributions in two products: Frozen, that is well above the third quartile, and delicatessen. It could be a small grocery store.
 
 One interesting thought to consider is if one (or more) of the six product categories is actually relevant for understanding customer purchasing. That is to say, is it possible to determine whether customers purchasing some amount of one group of goods will necessarily buy some proportional amount of another category of products? We can make this determination by training a supervised regression learner on a subset of the data with one feature removed and then score how well that model can predict the removed feature.
+
+\subsection{Feature Relevance}
+
+bla
+
+\subsection{Feature Distributions}
+
+bla
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DATA PREPROCESSING
@@ -147,7 +158,7 @@ In this section, I will choose to use either a K-Means clustering algorithm or a
 
 \section{Conclusion}
 \label{sec:conclusion}
-
+bla
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% REFLECTION
