@@ -118,7 +118,7 @@ The data point 271 spent less than 75\% of the other customers (lower quartile) 
 \subsection{Feature Relevance}
 One interesting thought to consider is if one (or more) of the six product categories is actually relevant for understanding customer purchasing. That is to say, is it possible to determine whether customers purchasing some amount of one group of goods will necessarily buy some proportional amount of another category of products? We can make this determination by training a supervised regression learner on a subset of the data with one feature removed and then score how well that model can predict the removed feature.
 
-The table  \ref{tab:r2} shows the $R^{2}$ when attempting to predict different features. The regressions were performed using a Decision Tree\footnote{Source: \url{http://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html}}. I divided the data between a test and a training set, and then took out one of the features at each iteration to be predicted by all others. Finally, I measured how well those features were relevant to replicate the hold-out column using the coefficient of determination, the $R^{2}$.
+The table  \ref{tab:r2} shows the $R^{2}$ when attempting to predict different features. The regressions were performed using a Decision Tree\footnote{Source: \url{http://goo.gl/JuLuJH}}. I divided the data between a test and a training set, and then took out one of the features at each iteration to be predicted by all others. Finally, I measured how well those features were relevant to replicate the hold-out column using the coefficient of determination, the $R^{2}$.
 
 \begin{table}[ht!]
 \centering
