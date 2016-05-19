@@ -91,6 +91,7 @@ max   &  112151.00 &  73498.00 &  92780.00 &  60869.00 &         40827.00 &     
 \end{table}
 
 \subsection{Selecting Samples}
+\label{sec:selecting_samples}
 To get a better understanding of the customers and how their data will transform through the analysis, in the Table \ref{tab:sample} I selected a few sample data points and plotted a boxplot in Figure \ref{fig:boxplot} comparing them with the distribution of each feature.
 
 \begin{table}[ht!]
@@ -135,20 +136,22 @@ Delicatessen     &   0.16 \\
 \caption{\label{tab:r2}The $R^{2}$ when predicting each feature}
 \end{table}
 
-As can be seen in the table above, two features, \textit{Grocery} and \textit{Detergents_Paper}, presented a high $R^2$ score. Around $75$\% and $55$\% of the sample variation in each of the columns used as labels were explained by the other features, respectively. Looking at just this score, I would say that at least the `Grocery` might be unnecessary for identifying customers' spending habits. A good deal of the information on the variability of this feature is contained in others. On the other hand, \textit{Fresh} and \textit{Frozen} presented negative $R^2$, what indicates that the information from them could not be retrieved using other features. In spite of those finds, it is important to point out that low R-squared values\footnote{Source: \url{http://goo.gl/rRAVdJ}} are not inherently bad. This score should always be analyzed in conjunction with other measurements. So, in the next session, I will inspect those relationships visually.
+As can be seen in the table above, two features, \textit{Grocery} and \textit{Detergents\_Paper}, presented a high $R^2$ score. Around $75$\% and $55$\% of the sample variation in each of the columns used as labels were explained by the other features, respectively. Looking at just this score, I would say that at least the `Grocery` might be unnecessary for identifying customers' spending habits. A good deal of the information on the variability of this feature is contained in others. On the other hand, \textit{Fresh} and \textit{Frozen} presented negative $R^2$, what indicates that the information from them could not be retrieved using other features. In spite of those finds, it is important to point out that low R-squared values\footnote{Source: \url{http://goo.gl/rRAVdJ}} are not inherently bad. This score should always be analyzed in conjunction with other measurements. So, in the next session, I will inspect those relationships visually.
 
 
-\subsection{Feature Distributions}
+\subsection{Visualize Feature Distributions}
 
-bla
+To get a better understanding of the dataset, in the figure \ref{fig:scatter_matrix} I am going to plot a scatter matrix of each of the six product features present in the data. In the main diagonal\footnote{Source: \url{http://www.mathwords.com/m/main_diagonal.htm}} is plotted the distribution of each one. As suggested in section \ref{sec:selecting_samples}, the features are very skewed, apparently showing a Log Normal Distribution\footnote{Source: \url{http://mathworld.wolfram.com/LogNormalDistribution.html}}.
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/scatter_matrix.png}
+\includegraphics[width=0.75\textwidth]{figures/scatter_matrix.png}
 \caption{\label{fig:scatter_matrix}How the Features Correlated}
 \end{figure}
 
-bla
+As expected, the scatter plot between \textit{Grocery} and \textit{Detergents\_Paper} presented a curious linear relationship. It might suggest that they are complements\footnote{Source: \url{http://www.investopedia.com/terms/c/complement.asp}} to each other. That is, they are consumed in conjunction with other, or they can be complements to a third variable. For example, the \textit{Milk} category seems to be slightly correlated with those features.
+
+The \textit{Fresh} and \textit{Frozen} categories do not correlate to other features at all, as suggested in the last section. However, as the most of the data points are lying in the bottom corner of the charts, it is a little cumbersome to judge the relationships. The Data can be covering some structure. In the next section, I will deal with this characteristic of the dataset.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DATA PREPROCESSING
