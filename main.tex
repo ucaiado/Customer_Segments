@@ -118,7 +118,7 @@ The data point 271 spent less than 75\% of the other customers (lower quartile) 
 \subsection{Feature Relevance}
 One interesting thought to consider is if one (or more) of the six product categories is actually relevant for understanding customer purchasing. That is to say, is it possible to determine whether customers purchasing some amount of one group of goods will necessarily buy some proportional amount of another category of products? We can make this determination by training a supervised regression learner on a subset of the data with one feature removed and then score how well that model can predict the removed feature.
 
-The table  \ref{tab:r2} shows the $R^{2}$ when attempting to predict different features. The regressions were performed using a Decision Tree\footnote{Source: \url{http://goo.gl/JuLuJH}}. I divided the data between a test and a training set, and then took out one of the features at each iteration to be predicted by all others. Finally, I measured how well those features were relevant to replicate the hold-out column using the coefficient of determination, the $R^{2}$.
+The table  \ref{tab:r2} shows the $R^{2}$ when attempting to predict different features. The regressions were performed using a Decision Tree\footnote{Source: \url{http://goo.gl/JuLuJH}}. I divided the data between a test and a training set, and then took out one of the features at each iteration to be predicted by all others. Finally, I measured how well those features were relevant to replicate the hold-out column using the coefficient of determination, the $R^{2}$. This coefficient is scored between 0 and 1, with 1 being a perfect fit. A negative $R^2$ implies the model fails to fit the data.
 
 \begin{table}[ht!]
 \centering
@@ -135,10 +135,18 @@ Delicatessen     &   0.16 \\
 \caption{\label{tab:r2}The $R^{2}$ when predicting each feature}
 \end{table}
 
-The $R^2$ is scored between 0 and 1, with 1 being a perfect fit. A negative $R^2$ implies the model fails to fit the data.
+As can be seen in the table above, two features, \textit{Grocery} and \textit{Detergents_Paper}, presented a high $R^2$ score. Around $75$\% and $55$\% of the sample variation in each of the columns used as labels were explained by the other features, respectively. Looking at just this score, I would say that at least the `Grocery` might be unnecessary for identifying customers' spending habits. A good deal of the information on the variability of this feature is contained in others. On the other hand, \textit{Fresh} and \textit{Frozen} presented negative $R^2$, what indicates that the information from them could not be retrieved using other features. In spite of those finds, it is important to point out that low R-squared values\footnote{Source: \url{http://goo.gl/rRAVdJ}} are not inherently bad. This score should always be analyzed in conjunction with other measurements. So, in the next session, I will inspect those relationships visually.
 
 
 \subsection{Feature Distributions}
+
+bla
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/scatter_matrix.png}
+\caption{\label{fig:scatter_matrix}How the Features Correlated}
+\end{figure}
 
 bla
 
