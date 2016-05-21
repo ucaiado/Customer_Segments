@@ -40,7 +40,7 @@ def features_boxplot(all_data, samples, indices):
                      whis=np.inf, color='c')
     # Add in points to show each selected observation
     sns.stripplot(x='annual spending', y='Product', data=samples2,
-                  hue='IDX', size=9, color='.3', linewidth=0)
+                  hue='IDX', size=9, color='0.3', linewidth=0)
     # insert a title
     ax.set_title('Annual Spending in Monetary Units by Product',
                  fontsize=16, y=1.03)
