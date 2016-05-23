@@ -37,9 +37,8 @@ def features_boxplot(all_data, samples, indices):
     samples2.index = samples2.IDX
     # Plot the  annual spending with horizontal boxes
     ax = sns.boxplot(x='annual spending', y='Product', data=data2,
-                     whis=np.inf, color='c')
+                     whis=np.inf, color='lightgrey')
     # Add in points to show each selected observation
-    sns.set_palette(flatui)
     sns.stripplot(x='annual spending',
                   y='Product',
                   data=samples2,
