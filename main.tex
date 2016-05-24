@@ -159,16 +159,16 @@ The \textit{Fresh} and \textit{Frozen} categories do not correlate to other feat
 
 \section{Data Preprocessing}
 \label{sec:data_preprocessing}
-In this section, you will preprocess the data to create a better representation of customers by performing a scaling on the data and detecting (and possibly removing) outliers. Preprocessing data is often times a critical step in assuring that results you obtain from your analysis are significant and meaningful.
+In this section, I will preprocess the data to create a better representation of customers by performing a scaling on the data and detecting (and possibly removing) outliers. Preprocessing data is often times a critical step in assuring that results you obtain from your analysis are significant and meaningful.
 
 
 \subsection{Feature Scaling}
-If data is not normally distributed, especially if the mean and median vary significantly (indicating a large skew), it is most often appropriate]\footnote{Source: \url{http://econbrowser.com/archives/2014/02/use-of-logarithms-in-economics}} to apply a non-linear scaling — particularly for financial data. One way to achieve this scaling is by using a Box-Cox test\url{http://scipy.github.io/devdocs/generated/scipy.stats.boxcox.html}}, which calculates the best power transformation of the data that reduces skewness. A simpler approach which can work in most cases would be applying the natural logarithm, taht I will use below
+If data is not normally distributed, especially if the mean and median vary significantly (indicating a large skew), it is most often appropriate\footnote{Source: \url{http://econbrowser.com/archives/2014/02/use-of-logarithms-in-economics}} to apply a non-linear scaling — particularly for financial data. One way to achieve this scaling is by using a Box-Cox test\footnote{Source: \url{http://scipy.github.io/devdocs/generated/scipy.stats.boxcox.html}}, which calculates the best power transformation of the data that reduces skewness. A simpler approach which can work in most cases would be applying the natural logarithm, that I will use below
 
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=0.75\textwidth]{figures/scatter_matrix_log.png}
-\caption{\label{fig:scatter_matrix}How the Features Correlated}
+\caption{\label{fig:log_scatter_matrix}How the Features Correlated}
 \end{figure}
 
 After applying a natural logarithm scaling to the data, the distribution of each feature appears much more normal. Now it is clear that there is a stronger relationship between the pairs of features \textit{Grocery} and \textit{Milk} and \textit{Grocery} and `Detergents and Paper`. \textit{Milk} and \textit{Detergents and Paper} are somewhat weaker but still presented a substantial correlation.
@@ -184,7 +184,7 @@ Below can be seem how the sample data has changed after having the natural logar
 413 &  8.513787 &  8.488588 &  8.799812 &  9.790655 &          6.815640 &      7.797702 \\
 
 \end{tabular}
-\caption{\label{tab:sample}A Sample Of The Original Dataset}
+\caption{\label{tab:log_sample}A Sample Of The Original Dataset}
 \end{table}
 
 Looking at the numbers transformed like that, without any reference, is a little difficult to interpret. In the next subsection, I will visualize the data in a boxplot.
@@ -192,11 +192,28 @@ Looking at the numbers transformed like that, without any reference, is a little
 
 \subsection{Outlier Detection}
 
-Detecting outliers in the data is extremely important in the data preprocessing step of any analysis. The presence of outliers can often skew results which take into consideration these data points. There are many "rules of thumb" for what constitutes an outlier in a dataset. Here, I will use Tukey's Method for identfying outliers\footnote{Source: \url{http://datapigtechnologies.com/blog/index.php/highlighting-outliers-in-your-data-with-the-tukey-method/}}: An *outlier step* is calculated as 1.5 times the interquartile range (IQR). A data point with a feature that is beyond an outlier step outside of the IQR for that feature is considered abnormal. The following summary shows the number of outliers by feature and the data points that were considered abnormal for more than one feature.
+Detecting outliers in the data is extremely important in the data preprocessing step of any analysis. The presence of outliers can often skew results which take into consideration these data points. There are many "rules of thumb" for what constitutes an outlier in a dataset. Here, I will use Tukey's Method for identfying outliers\footnote{Source: \url{http://goo.gl/FWfWnp}}: An *outlier step* is calculated as 1.5 times the interquartile range (IQR). A data point with a feature that is beyond an outlier step outside of the IQR for that feature is considered abnormal. The following summary shows the number of outliers by feature and the data points that were considered abnormal for more than one feature.
+
+% code snipet
+\begin{lstlisting}
+Number of Data points considered outliers for the feature
+
+Fresh             	16                
+Milk              	4                 
+Grocery           	2                 
+Frozen            	10                
+Detergents_Paper  	2                 
+Delicatessen      	14                
+-------------------------
+TOTAL: Outliers: 48 | Unique Outliers: 42
+
+
+Data points considered outliers for more than one feature:
+\end{lstlisting}
 
 \begin{table}[ht!]
 \centering
-\begin{tabular}{l|rrrrrr}
+\begin{tabular}{l|rrrrrrr}
 {ID} &    Fresh &     Milk &  Grocery &    Frozen & Detergents & Delicatessen & count \\\hline
 128 &  4.941642 &  9.087834 &   8.248791 &  4.955827 &          6.967909 &      1.098612 &      2 \\
 154 &  6.432940 &  4.007333 &   4.919981 &  4.317488 &          1.945910 &      2.079442 &      3 \\
@@ -205,18 +222,18 @@ Detecting outliers in the data is extremely important in the data preprocessing 
 75  &  9.923192 &  7.036148 &   1.098612 &  8.390949 &          1.098612 &      6.882437 &      2 \\
 
 \end{tabular}
-\caption{\label{tab:sample}A Sample Of The Original Dataset}
+\caption{\label{tab:outliers}A Sample Of The Original Dataset}
 \end{table}
 
-There are 48 outliers in the dataset and 42 are unique. 5 data points were considered outliers for more than one feature. One of the them was abnormal to three features, as can be seen in the \textit{count} column in the table above. To decide which data point should be removed, I am going to plot a boxplot showing where these 5 data points are located considering the dataset without all the 42 outliers.
+There are 48 outliers in the dataset and 42 are unique. 5 data points were considered outliers for more than one feature. One of the them was abnormal to three features, as can be seen in the \textit{count} column in the table \ref{tab:outliers}. To decide which data point should be removed, I am going to plot a boxplot showing where these 5 data points are located considering the dataset without all the 42 outliers.
 
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=0.75\textwidth]{figures/boxplot_features_log.png}
-\caption{\label{fig:scatter_matrix}How the Features Correlated}
+\caption{\label{fig:log_boxplot}How the Features Correlated}
 \end{figure}
 
-I am going to exclude the client IDs 75, 66, 128 and 154 from the dataset. As can be seen in the figure above, the 75 is far away from the lower whiskers of the \textit{Grocery} category distribution. It is the same to the ID 128 data point in the \textit{Delicatessen} category and to the ID 66 in \textit{Fresh}. Lastly, I will exclude the 154 because was considered outlier for 3 groups. Despite that the ID 66 was found to be abnormal for two categories, I will not exclude it because it was not so far away from the lower whisker of the categories that it was considered an outlier.
+I am going to exclude the client IDs 75, 66, 128 and 154 from the dataset. As can be seen in the figure \ref{fig:log_boxplot}, the 75 is far away from the lower whiskers of the \textit{Grocery} category distribution. It is the same to the ID 128 data point in the \textit{Delicatessen} category and to the ID 66 in \textit{Fresh}. Lastly, I will exclude the 154 because was considered outlier for 3 groups. Despite that the ID 66 was found to be abnormal for two categories, I will not exclude it because it was not so far away from the lower whisker of the categories that it was considered an outlier.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FEATURE TRANSFORMATION
