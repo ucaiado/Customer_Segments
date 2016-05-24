@@ -44,7 +44,7 @@ def features_boxplot(all_data, samples, indices):
                   data=samples2,
                   hue='IDX',
                   size=9,
-                  palette=sns.color_palette("Pastel2", 5),
+                  palette=sns.color_palette('Set2', 5),
                   linewidth=0)
     # insert a title
     ax.set_title('Annual Spending in Monetary Units by Product',
