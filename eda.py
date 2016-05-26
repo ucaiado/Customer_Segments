@@ -11,6 +11,7 @@ Created on 05/16/2016
 import seaborn as sns
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def features_boxplot(all_data, samples, indices):
@@ -51,3 +52,51 @@ def features_boxplot(all_data, samples, indices):
                  fontsize=16, y=1.03)
 
     return ax
+
+
+def pca_results(good_data, pca):
+    '''
+    Create a DataFrame of the PCA results. Includes dimension feature weights
+    and explained variance Visualizes the PCA results
+    :param good_data: DataFrame. all dataset log transformed with 6 columns
+    :param pca: Sklearn Object. a PCA decomposition object already fitted
+    '''
+    # Dimension indexing
+    dimensions = dimensions = ['Dimension {}'.format(i)
+                               for i in range(1, len(pca.components_)+1)]
+
+    # PCA components
+    components = pd.DataFrame(np.round(pca.components_, 4),
+                              columns=good_data.keys())
+    components.index = dimensions
+
+    # PCA explained variance
+    ratios = pca.explained_variance_ratio_.reshape(len(pca.components_), 1)
+    variance_ratios = pd.DataFrame(np.round(ratios, 4),
+                                   columns=['Explained Variance'])
+    variance_ratios.index = dimensions
+
+    # reshape the data to be plotted
+    df_aux = components.unstack().reset_index()
+    df_aux.columns = ["Feature", "Dimension", "Variance"]
+
+    # Create a bar plot visualization
+    fig, ax = plt.subplots(figsize=(14, 8))
+
+    # Plot the feature weights as a function of the components
+    sns.barplot(x="Dimension", y="Variance", hue="Feature", data=df_aux, ax=ax)
+    ax.set_ylabel("Feature Weights")
+    ax.set_xlabel("")
+    ax.set_xticklabels(dimensions, rotation=0)
+
+    # Display the explained variance ratios
+    for i, ev in enumerate(pca.explained_variance_ratio_):
+        ax.text(i-0.40, ax.get_ylim()[1] + 0.05,
+                "Explained Variance\n          %.4f" % (ev))
+
+    # insert a title
+    # ax.set_title('PCA Explained Variance Ratio',
+    #              fontsize=16, y=1.10)
+
+    # Return a concatenated DataFrame
+    return pd.concat([variance_ratios, components], axis=1)
