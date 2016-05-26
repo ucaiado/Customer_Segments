@@ -168,7 +168,7 @@ If data is not normally distributed, especially if the mean and median vary sign
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=0.75\textwidth]{figures/scatter_matrix_log.png}
-\caption{\label{fig:log_scatter_matrix}How the Features Correlated}
+\caption{\label{fig:log_scatter_matrix}How the Log-Transformed Features Correlated}
 \end{figure}
 
 After applying a natural logarithm scaling to the data, the distribution of each feature appears much more normal. Now it is clear that there is a stronger relationship between the pairs of features \textit{Grocery} and \textit{Milk} and \textit{Grocery} and `Detergents and Paper`. \textit{Milk} and \textit{Detergents and Paper} are somewhat weaker but still presented a substantial correlation.
@@ -215,14 +215,14 @@ Data points considered outliers for more than one feature:
 \centering
 \begin{tabular}{l|rrrrrrr}
 {ID} &    Fresh &     Milk &  Grocery &    Frozen & Detergents & Delicatessen & count \\\hline
-128 &  4.941642 &  9.087834 &   8.248791 &  4.955827 &          6.967909 &      1.098612 &      2 \\
-154 &  6.432940 &  4.007333 &   4.919981 &  4.317488 &          1.945910 &      2.079442 &      3 \\
-65  &  4.442651 &  9.950323 &  10.732651 &  3.583519 &         10.095388 &      7.260523 &      2 \\
-66  &  2.197225 &  7.335634 &   8.911530 &  5.164786 &          8.151333 &      3.295837 &      2 \\
-75  &  9.923192 &  7.036148 &   1.098612 &  8.390949 &          1.098612 &      6.882437 &      2 \\
+128 &  4.9416 &  9.0878 &   8.2488 &  4.9558 &          6.9679 &      1.0986 &      2 \\
+154 &  6.4329 &  4.0073 &   4.9199 &  4.3174 &          1.9459 &      2.0794 &      3 \\
+65  &  4.4426 &  9.9503 &  10.7326 &  3.5835 &         10.0953 &      7.2605 &      2 \\
+66  &  2.1972 &  7.3356 &   8.9115 &  5.1647 &          8.1513 &      3.2958 &      2 \\
+75  &  9.9232 &  7.0361 &   1.0986 &  8.3909 &          1.0986 &      6.8824 &      2 \\
 
 \end{tabular}
-\caption{\label{tab:outliers}A Sample Of The Original Dataset}
+\caption{\label{tab:outliers}A Sample Of The Log-Transformed Dataset}
 \end{table}
 
 There are 48 outliers in the dataset and 42 are unique. 5 data points were considered outliers for more than one feature. One of the them was abnormal to three features, as can be seen in the \textit{count} column in the table \ref{tab:outliers}. To decide which data point should be removed, I am going to plot a boxplot showing where these 5 data points are located considering the dataset without all the 42 outliers.
@@ -230,7 +230,7 @@ There are 48 outliers in the dataset and 42 are unique. 5 data points were consi
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=0.75\textwidth]{figures/boxplot_features_log.png}
-\caption{\label{fig:log_boxplot}How the Features Correlated}
+\caption{\label{fig:log_boxplot}Distribution Of The Log-Transformed Features}
 \end{figure}
 
 I am going to exclude the client IDs 75, 66, 128 and 154 from the dataset. As can be seen in the figure \ref{fig:log_boxplot}, the 75 is far away from the lower whiskers of the \textit{Grocery} category distribution. It is the same to the ID 128 data point in the \textit{Delicatessen} category and to the ID 66 in \textit{Fresh}. Lastly, I will exclude the 154 because was considered outlier for 3 groups. Despite that the ID 66 was found to be abnormal for two categories, I will not exclude it because it was not so far away from the lower whisker of the categories that it was considered an outlier.
@@ -243,6 +243,56 @@ I am going to exclude the client IDs 75, 66, 128 and 154 from the dataset. As ca
 \label{sec:feature_transformation}
 In this section I will use principal component analysis (PCA) to draw conclusions about the underlying structure of the wholesale customer data. Since using PCA on a dataset calculates the dimensions which best maximize variance, we will find which compound combinations of features best describe customers.
 
+\subsection{PCA}
+
+Now that the data has been scaled to a more normal distribution and has had any necessary outliers removed, I will apply PCA to the new dataset to discover which dimensions about the data best maximize the variance of features involved. In addition to finding these dimensions, PCA will also report the \textit{explained variance ratio} of each dimension — how much variance within the data is explained by that dimension alone. Note that a component (dimension) from PCA can be considered a new "feature" of the space, however it is a composition of the original features present in the data.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/pca_results.png}
+\caption{\label{fig:pca_results}PCA Results}
+\end{figure}
+
+As shown in the Figure above, together the 6 components explain 100\% of variance in the dataset. Combining\footnote{Source: \url{https://goo.gl/cz10xK}} all PCs would form a coordinate system where we could graph each point from the original data. More than 70\% of the variance was explained by the first two principal components. The first four explained more than 93\% of the variance.
+
+The principal components of a dataset can be understood as new compound features, where each PC is a weighted linear combination of the original features. In the first component, for instance, \textit{Detergent\_Paper} had a strong positive effect on the PC value, followed by \textit{Grocery} and \textit{Milk}. \textit{Delicatessen} also increased the PC value, but isn't very expressive. \textit{Fresh} and \textit{Frozen} slightly decreased the PC value. Curiously, in the second component, the primary features were \textit{Fresh}, \textit{Frozen} and \textit{Delicatessen}. The other features slightly increased the PC value.
+
+It means that if a customer buys more \textit{Detergent\_Paper} items, it follows that there is a larger increase in the feature \textit{Dimension 1} and a smaller increase in the \textit{Dimension 2}. Also, if this same customer buys more \textit{Fresh} items, it would just cause a lower decrease in the \textit{PC1},but would result in a larger increase in \textit{PC2}. As the first two PCs represent almost 70\% of the variance, we would have a decent grasp where this customer lies in the original feature space looking just at this two features.
+
+In the third dimension of this new feature space (the principal components), \textit{Fresh} presented an enormous negative effect on the PC value, while \textit{Delicatessen} strongly increased the value. \textit{Frozen} strongly increased the fourth dimension, while \textit{Delicatessen} had the opposite effect.
+
+The table \ref{tab:sample_transformed_1} shows how the log-transformed sample data has changed after having a PCA transformation applied to it in six dimensions.
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{l|rrrrrr}
+{ID} &  Dim. 1 &  Dim. 2 &  Dim. 3 &  Dim. 4 &  Dim. 5 &  Dim. 6 \\\hline
+1   &       1.7537 &       0.8680 &       0.2256 &       0.0077 &      -0.1177 &       0.2111 \\
+271 &      -1.3268 &      -0.7392 &       1.5119 &      -0.7648 &      -0.7701 &       0.8154 \\
+413 &       0.0157 &       1.6981 &       1.6267 &       1.4426 &      -0.0606 &      -0.1465 \\
+
+\end{tabular}
+\caption{\label{tab:sample_transformed_1}Log-Transformed sample Using 6 Dimensions Transformation}
+\end{table}
+
+\subsection{Dimensionality Reduction}
+
+When using principal component analysis, one of the main goals is to reduce the dimensionality of the data — in effect, reducing the complexity of the problem. Dimensionality reduction comes at a cost: Fewer dimensions used implies less of the total variance in the data is being explained. Because of this, the \textit{cumulative explained variance ratio} is extremely important for knowing how many dimensions are necessary for the problem. Additionally, if a significant amount of variance is explained by only two or three dimensions, the reduced data can be visualized afterwards.
+
+The table \ref{tab:sample_transformed_2} shows how the log-transformed sample data has changed after having a PCA transformation applied to it using only two dimensions. Observe how the values for the first two dimensions remains unchanged when compared to a PCA transformation in six dimensions.
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{l|rr}
+{ID} &  Dimension 1 &  Dimension 2 \\\hline
+1 &       1.7537 &       0.8680 \\
+271 &      -1.3268 &      -0.7392 \\
+413 &       0.0157 &       1.6981 \\
+
+\end{tabular}
+\caption{\label{tab:sample_transformed_2}Log-Transformed sample Using 2 Dimensions Transformation}
+\end{table}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CLUSTERING
@@ -252,6 +302,9 @@ In this section I will use principal component analysis (PCA) to draw conclusion
 \label{sec:clustering}
 In this section, I will choose to use either a K-Means clustering algorithm or a Gaussian Mixture Model clustering algorithm to identify the various customer segments hidden in the data. I will then recover specific data points from the clusters to understand their significance by transforming them back into their original dimension and scale.
 
+\subsection{Creating Clusters}
+
+bla
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CONCLUSION
