@@ -300,7 +300,29 @@ The table \ref{tab:sample_transformed_2} shows how the log-transformed sample da
 
 \section{Clustering}
 \label{sec:clustering}
-In this section, I will choose to use either a K-Means clustering algorithm or a Gaussian Mixture Model clustering algorithm to identify the various customer segments hidden in the data. I will then recover specific data points from the clusters to understand their significance by transforming them back into their original dimension and scale.
+In this section, I will introduce the EM algorithm and use it to explain the difference between the K-Means and Gaussian Mixture Model (GMM) clustering algorithm. I will use them to identify the various customer segments hidden in the data. Then, I will choose one to recover specific data points from the clusters to understand their significance by transforming them back into their original dimension and scale. 
+
+\subsection{Comparing GMM To K-Means Algorithm}
+
+The GMM uses the Estimation-Maximization (EM) algorithm for fitting mixture-of-Gaussian models, using a Gaussian distribution in the Estimation step with covariance matrix between the different clusters. The KMeans\footnote{Source: \url{http://goo.gl/7dsCl3}} is equivalent to the EM algorithm when the covariance matrix between the clusters is small, all equal and diagonal.
+
+That said, I am going to explain the Estimation-Maximization algorithm to show where the main difference between GMM and K-mean algorithm comes from. The EM\footnote{Source: \url{http://goo.gl/qwyaYM}} algorithm (\cite{Mitchell}) is a widely used approach to learning in the presence of unobserved variables.
+
+So, let $X = \{x_1, ..., x_m\}$ denote a set of observed data in a set of $m$ independently drawn instances and $Z = \{z_1, ..., z_m\}$ unobserved data (latent variables) in these same instances. Let $Y = X \cup Z$ be a random variable\footnote{Source: \url{https://www.mathsisfun.com/data/random-variables.html}} representing the full data. $h$ is the hypothesized values to the parameters $\theta$, that governs the probability distribution from $Y$. In GMM algorithm, it represents the $\mu$ and $\sigma$ of the Gaussian Distribution. ${h}'$ is the revised parameters.
+
+The EM algorithm searches for the maximum likelihood hypothesis ${h}'$ by seeking the parameters that maximize $E[\ln \, P(Y |{h}')]$. As it is an expectation, it is averaging over the possible values of the latent variables $Z$, weighting each $z$ according to its probability. Thus, the following steps are repeated until convergence:
+
+\textbf{step 1} Estimation(E) step: Calculate $Q({h}'|h)$ using current hypothesis $h$ and the observed data $X$ to estimate the probability distribution over $Y$.
+
+$$Q({h}'|h) \leftarrow E[\ln P(Y | {h}')| h, \, X] $$
+
+\textbf{step 2} Maximization(M) step: Replace hypothesis $h$ by the hypothesis ${h}'$ that maximizes this $Q$ function.
+
+$$h \leftarrow \underset{{h}'}{\arg \max} \, Q({h}'|h)$$
+
+Where $\ln P(Y | {h}') = ln \prod p(y_i| {h}') = \sum ln\, p(y_i| {h}')$. As stated before, the hypothesis ${h}'$ represents the values to the parameters $\theta$ of the distribution of each cluster in the data set (we need to provide the number of clusters beforehand). So, we are summing up the log-probability of each particular instance be part of one of these clusters. As the clusters in GMM might covariate in a meaningful way and in K-means not, \textbf{the main difference between both is that an instance can be "shared" by more than one group at a time in GMM (due to the covariance matrix). It uses a probabilistic approach to classify the data. On the other hand, the K-means performs a kind of "hard" assignment, attributing each instance to a particular cluster}.
+
+One advantage of the K-means over GMM is the simplicity -  It basically minimizes the sum of Euclidean distances between each point, while the other needs to estimate the $\mu$, $\sigma$ of each cluster. It leads the K-means to be a relatively faster algorithm and probably will work better when the data is clearly separable. In the next subsection, I will test both algorithms to choose between them.
 
 \subsection{Creating Clusters}
 
