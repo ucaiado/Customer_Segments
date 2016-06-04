@@ -320,13 +320,63 @@ $$Q({h}'|h) \leftarrow E[\ln P(Y | {h}')| h, \, X] $$
 
 $$h \leftarrow \underset{{h}'}{\arg \max} \, Q({h}'|h)$$
 
-Where $\ln P(Y | {h}') = ln \prod p(y_i| {h}') = \sum ln\, p(y_i| {h}')$. As stated before, the hypothesis ${h}'$ represents the values to the parameters $\theta$ of the distribution of each cluster in the data set (we need to provide the number of clusters beforehand). So, we are summing up the log-probability of each particular instance be part of one of these clusters. As the clusters in GMM might covariate in a meaningful way and in K-means not, \textbf{the main difference between both is that an instance can be "shared" by more than one group at a time in GMM (due to the covariance matrix). It uses a probabilistic approach to classify the data. On the other hand, the K-means performs a kind of "hard" assignment, attributing each instance to a particular cluster}.
+Where $\ln P(Y | {h}') = ln \prod p(y_i| {h}') = \sum ln\, p(y_i| {h}')$. As stated before, the hypothesis ${h}'$ represents the values to the parameters $\theta$ of the distribution of each cluster in the data set (we need to provide the number of clusters beforehand). So, we are summing up the log-probability of each particular instance be part of one of these clusters. As the clusters in GMM might covariate in a meaningful way and in K-means not, the main difference between both is that an instance can be "shared" by more than one group at a time in GMM (due to the covariance matrix). It uses a probabilistic approach to classify the data. On the other hand, the K-means performs a kind of "hard" assignment, attributing each instance to a particular cluster.
 
 One advantage of the K-means over GMM is the simplicity -  It basically minimizes the sum of Euclidean distances between each point, while the other needs to estimate the $\mu$, $\sigma$ of each cluster. It leads the K-means to be a relatively faster algorithm and probably will work better when the data is clearly separable. In the next subsection, I will test both algorithms to choose between them.
 
 \subsection{Creating Clusters}
 
-bla
+Depending on the problem, the number of clusters that you expect to be in the data may already be known. When the number of clusters is not known \textit{a priori}, there is no guarantee that a given number of clusters best segments the data, since it is unclear what structure exists in the data — if any. However, we can quantify the "goodness" of a clustering by calculating each data point's \textit{silhouette coefficient}. This coefficient\footnote{Source: \url{http://http://goo.gl/m7XIrQ}} measures how similar a data point is to its assigned cluster, from -1 (dissimilar) to 1 (similar). In the figure \ref{fig:silhouette}, I am going to calculate the mean silhouette coefficient to K-Means and GMM using different number of clusters. Also, I will test different covariance structures to GMM.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/silhouette_score.png}
+\caption{\label{fig:silhouette}Silhouette Coefficient}
+\end{figure}
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{l|rrrrr}
+{\# } &  GMM\_diag &  GMM\_full &  GMM\_spherical &  GMM\_tied &    K-means \\\hline
+2        &  0.411629 &  0.410722 &       0.422988 &  0.423095 &  0.426297 \\
+3        &  0.361776 &  0.388915 &       0.400039 &  0.383261 &  0.398013 \\
+4        &  0.327802 &  0.300845 &       0.358788 &  0.320299 &  0.332522 \\
+5        &  0.278441 &  0.235268 &       0.226959 &  0.273933 &  0.352106 \\
+6        &  0.269692 &  0.289899 &       0.329408 &  0.313793 &  0.367256 \\
+8        &  0.290437 &  0.194652 &       0.336048 &  0.274649 &  0.363809 \\
+10       &  0.262524 &  0.156622 &       0.328277 &  0.261379 &  0.346406 \\
+
+\end{tabular}
+\caption{\label{tab:centroids}Silhouette Coefficient By Number Of Centroids}
+\end{table}
+
+As can be seen in Table \ref{tab:centroids}, the best K-means silhouette coefficient (around $0.4263$) occurred when it was set with two clusters. This setting outperformed all the GMM methods configurations tested. I am going to use this clustering algorithm in the Figure \ref{fig:clustering_1} to split the dataset into two groups. I will also plot the sample and the centroids, denoted numbers.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/clustering_1.png}
+\caption{\label{fig:clustering_1}Clusters Visualization}
+\end{figure}
+
+\subsection{Data Recovery}
+
+Each cluster present in the visualization in the Figure \ref{fig:clustering_1} has a central point. These centers (or means) are not specifically data points from the data, but rather the \textit{averages} of all the data points predicted in the respective clusters. For the problem of creating customer segments, a cluster's center point corresponds to the average customer of that segment. Since the data is currently reduced in dimension and scaled by a logarithm, we can recover the representative customer spending from these data points by applying the inverse transformations.
+
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{l|rrrrrr}
+{Segment} &  Fresh &  Milk &  Grocery &  Frozen &  Deterg. Paper &  Delicatessen \\\hline
+0 &   9041 &  1924 &     2508 &    2116 &               301 &           689 \\
+1 &   3754 &  7970 &    12296 &     904 &              4666 &          1027 \\
+
+\end{tabular}
+\caption{\label{tab:centrois_Recov}Representative Mean Customer Spending}
+\end{table}
+
+The \textit{average customer} of Segment $0$ has consumed more than $50\%$ of the data set on Fresh, Grocery, and Frozen Categories. On the other hand, he has consumed less than $50\%$ in the other categories. On Detergents and Paper, he has spent around $25\%$. This cluster could includes costumers like restaurants, for instance. The \textit{average customer} of Segment $1$ has consumed well above $75\%$ on Milk and Grocery and has spent around $25\%$ of the dataset on Frozen category. It could include costumers like coffee shops and grocery stores.
+
+Looking at the predictions for each sample point, the segmentation performed is not entirely consistent with what I have thought. When I analyzed the Figure \ref{fig:boxplot}, I have mentioned that the sample points $1$ could be a hotel, the sample point $271$ might be a coffee shop and the $413$, a small grocery store. So, if I follow up my previous interpretations, these data point should be assign to the clusters $\{ 0, 1, 1\}$, but it turned out being assign to the segments $\{ 1, 0, 0\}$. The side of the data points is correct, but my previous statements might be inaccurate.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CONCLUSION
@@ -334,7 +384,22 @@ bla
 
 \section{Conclusion}
 \label{sec:conclusion}
-bla
+
+As stated in Section \ref{sec:introduction}, the goal here is to describe the variation in the different types of customers. The companies often run A/B tests\footnote{Source: \url{https://en.wikipedia.org/wiki/A/B_testing}} when making small changes to their products or services, where two versions (A and B) are compared, which are identical except for one variation that might affect a user's behavior.
+
+The analysis suggested that there are two customers groups in the dataset. So, if the wholesale distributor wanted to change its delivery service from 5 days a week to 3 days a week, he could take two samples from each group and run an A/B test to see how each segment would respond to the change in the delivery time. The Segment 0 that spends heavily in Fresh and Grocery might react differently to the delivery strategy than the Segment 1, for example. Thus, the segmentation would help the wholesale distributor choosing between delivery strategies based on the purchases behavior of a particular customer.
+
+The clusters found also could be used as new features in the dataset. As some features may be affected by the customer segment, the groups could be used as dummy variables in a supervised learning task, for example. So, if the wholesale distributor wanted to predict the sales in another product category, the segmentation found would be used as one of the features to train the model and could improve the performance of the algorithm.
+
+Finally, at the beginning of this project, it was discussed that the \textit{Channel} and \textit{Region} features would be excluded from the dataset so that the customer product categories were emphasized in the analysis. In the Figure \ref{fig:clustering_2}, I am going to reintroduce the \textit{Channel} feature to the dataset. An interesting structure emerges when considering the same PCA dimensionality reduction applied earlier on to the original dataset.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/clustering_2.png}
+\caption{\label{fig:clustering_2}Cluster Visualization}
+\end{figure}
+
+The K-means successfully identified the number of the main categories in the dataset. Although the groups are not clearly separable, as expected by the algorithm, I believe that it worked fine. The underlying distribution of Hotel/Restaurant/Cafe customers to Retailer customers suggests that some of them share characteristics of each other. For instance, a big hotel could consume like a retailer and a retailer can be specialized in sell products to hotels, assuming the same behavior of the last one. So, I believe that these classifications are consistent enough with the previous finds.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% REFLECTION
@@ -342,7 +407,7 @@ bla
 
 \section{Reflection}
 \label{sec:reflection}
-Bla bla bla
+Although my interpretation of the clusters was not entirely correct, the way the cluster algorithm has split the data makes sense. Even so, given that the dataset is not clearly separable, would be interesting to see how a soft clustering assignment would have performed. Nevertheless, for the purpose of this project, the segmentation found would be useful to best structure the delivery service of the wholesale distributor.
 
 
 
