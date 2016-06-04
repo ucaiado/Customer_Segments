@@ -96,7 +96,7 @@ def cluster_results(reduced_data, preds, centers, pca_samples):
     ax.set_title(s_title, fontsize=16)
 
 
-def channel_results(reduced_data, outliers, pca_samples):
+def channel_results(reduced_data, outliers, pca_samples, na_index):
     '''
     Visualizes the PCA-reduced cluster data in two dimensions using the full
     dataset Data is labeled by "Channel" and cues added for student-selected
@@ -104,6 +104,7 @@ def channel_results(reduced_data, outliers, pca_samples):
     :param reduced_data: pandas dataframe. the dataset transformed and cleaned
     :param outliers: list. the datapoint considered outliers
     :param pca_samples: numpy array. the sample choosen
+    :param pca_samples: numpy array. the original IDs of the sample
     '''
     # Check that the dataset is loadable
     try:
@@ -134,7 +135,7 @@ def channel_results(reduced_data, outliers, pca_samples):
                      s=30)
 
     # Plot transformed sample points
-    for i, sample in enumerate(pca_samples):
+    for i, sample in zip(na_index, pca_samples):
         ax.scatter(x=sample[0], y=sample[1], s=200,
                    linewidth=3,
                    color='black',
