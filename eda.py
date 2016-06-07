@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def features_boxplot(all_data, samples, indices):
+def features_boxplot(all_data, samples, indices, b_log=False):
     '''
     Return a matplotlib object with a boxplot of all features in the dataset
     pointing out the data in the sample using dots. The legend is the indices
@@ -47,6 +47,9 @@ def features_boxplot(all_data, samples, indices):
                   size=9,
                   palette=sns.color_palette('Set2', 5),
                   linewidth=0)
+    if b_log:
+        ax.set_xscale('log')
+        ax.set_xlabel('log(annual spending)')
     # insert a title
     ax.set_title('Annual Spending in Monetary Units by Product',
                  fontsize=16, y=1.03)
@@ -176,21 +179,21 @@ def pca_results(good_data, pca):
 
     # reshape the data to be plotted
     df_aux = components.unstack().reset_index()
-    df_aux.columns = ["Feature", "Dimension", "Variance"]
+    df_aux.columns = ['Feature', 'Dimension', 'Variance']
 
     # Create a bar plot visualization
     fig, ax = plt.subplots(figsize=(14, 8))
 
     # Plot the feature weights as a function of the components
-    sns.barplot(x="Dimension", y="Variance", hue="Feature", data=df_aux, ax=ax)
-    ax.set_ylabel("Feature Weights")
-    ax.set_xlabel("")
+    sns.barplot(x='Dimension', y='Variance', hue='Feature', data=df_aux, ax=ax)
+    ax.set_ylabel('Feature Weights')
+    ax.set_xlabel('')
     ax.set_xticklabels(dimensions, rotation=0)
 
     # Display the explained variance ratios
     for i, ev in enumerate(pca.explained_variance_ratio_):
         ax.text(i-0.40, ax.get_ylim()[1] + 0.05,
-                "Explained Variance\n          %.4f" % (ev))
+                'Explained Variance\n          %.4f' % (ev))
 
     # insert a title
     # ax.set_title('PCA Explained Variance Ratio',
