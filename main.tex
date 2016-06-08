@@ -116,6 +116,7 @@ Usually data expressed in money, as wealth, expenses, income and so on, are very
 
 The data point 271 spent less than 75\% of the other customers (lower quartile) in three product categories: Fresh, Groceries and detergent papers. On the another hand, it spent above the median in products relates to Milk. It could be a small coffee shop, for example. The customer $1$ could be a hotel, as it spent above or expressively above the mean in all product categories, except by Fresh. The last customer selected, 413, has spent at the fourth quartile of the distributions in two products: Frozen, that is well above the third quartile, and delicatessen. It could be a small grocery store.
 
+\newpage
 \subsection{Feature Relevance}
 One interesting thought to consider is if one (or more) of the six product categories is actually relevant for understanding customer purchasing. That is to say, is it possible to determine whether customers purchasing some amount of one group of goods will necessarily buy some proportional amount of another category of products? We can make this determination by training a supervised regression learner on a subset of the data with one feature removed and then score how well that model can predict the removed feature.
 
@@ -141,17 +142,26 @@ As can be seen in the table above, two features, \textit{Grocery} and \textit{De
 
 \subsection{Visualize Feature Distributions}
 
-To get a better understanding of the dataset, in the figure \ref{fig:scatter_matrix} I am going to plot a scatter matrix of each of the six product features present in the data. In the main diagonal\footnote{Source: \url{http://www.mathwords.com/m/main_diagonal.htm}} is plotted the distribution of each one. As suggested in section \ref{sec:selecting_samples}, the features are very skewed, apparently showing a Log Normal Distribution\footnote{Source: \url{http://mathworld.wolfram.com/LogNormalDistribution.html}}.
+To get a better understanding of the dataset, in the figure \ref{fig:scatter_matrix} I am going to plot a scatter matrix of each of the six product features present in the data.
 
+\newpage
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=0.75\textwidth]{figures/scatter_matrix.png}
 \caption{\label{fig:scatter_matrix}How the Features Correlated}
 \end{figure}
 
-As expected, the scatter plot between \textit{Grocery} and \textit{Detergents\_Paper} presented a curious linear relationship. It might suggest that they are complements\footnote{Source: \url{http://www.investopedia.com/terms/c/complement.asp}} to each other. That is, they are consumed in conjunction with other, or they can be complements to a third variable. For example, the \textit{Milk} category seems to be slightly correlated with those features.
+In the main diagonal\footnote{Source: \url{http://www.mathwords.com/m/main_diagonal.htm}} is plotted the distribution of each one. As suggested in section \ref{sec:selecting_samples}, the features are very skewed, apparently showing a Log Normal Distribution\footnote{Source: \url{http://mathworld.wolfram.com/LogNormalDistribution.html}}. As the most of the data points are lying in the bottom corner of the charts, it is a little cumbersome to judge the relationships. Below, I am going to look at the correlation matrix of the features using a heat map.
 
-The \textit{Fresh} and \textit{Frozen} categories do not correlate to other features at all, as suggested in the last section. However, as the most of the data points are lying in the bottom corner of the charts, it is a little cumbersome to judge the relationships. The Data can be covering some structure. In the next section, I will deal with this characteristic of the dataset.
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/heatmap.png}
+\caption{\label{fig:heatmap}Heat Map Of The Correlation Matrix}
+\end{figure}
+
+The scatter plot between \textit{Grocery} and \textit{Detergents\_Paper} presented a curious linear relationship. It might suggest that they are complements\footnote{Source: \url{http://www.investopedia.com/terms/c/complement.asp}} to each other. That is, they are consumed in conjunction with other, or they can be complements to a third variable. For example, the \textit{Milk} category seems to be slightly correlated with those features. The strength of this relationship can be confirmed by the correlation between the two features ($0.92$).
+
+The \textit{Fresh} and \textit{Frozen} categories are slightly ($0.35$) correlated with each other, as the pairs \textit{Delicatessen} and  \textit{Frozen} ($0.39$) and \textit{Delicatessen} and \textit{Milk} ($0.41$). In the next section, I will deal with apparently log distribution of the dataset.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DATA PREPROCESSING
@@ -293,6 +303,15 @@ The table \ref{tab:sample_transformed_2} shows how the log-transformed sample da
 \caption{\label{tab:sample_transformed_2}Log-Transformed sample Using 2 Dimensions Transformation}
 \end{table}
 
+bla 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/scatter_after_pca.png}
+\caption{\label{fig:scatter_pca}How Principal Components Are Distributed}
+\end{figure}
+
+bla
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CLUSTERING
