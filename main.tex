@@ -303,15 +303,15 @@ The table \ref{tab:sample_transformed_2} shows how the log-transformed sample da
 \caption{\label{tab:sample_transformed_2}Log-Transformed sample Using 2 Dimensions Transformation}
 \end{table}
 
-bla 
+% bla 
 
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=0.75\textwidth]{figures/scatter_after_pca.png}
-\caption{\label{fig:scatter_pca}How Principal Components Are Distributed}
-\end{figure}
+% \begin{figure}[ht!]
+% \centering
+% \includegraphics[width=0.75\textwidth]{figures/scatter_after_pca.png}
+% \caption{\label{fig:scatter_pca}How Principal Components Are Distributed}
+% \end{figure}
 
-bla
+% bla
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CLUSTERING
@@ -395,7 +395,9 @@ Each cluster present in the visualization in the Figure \ref{fig:clustering_1} h
 
 The \textit{average customer} of Segment $0$ has consumed more than $50\%$ of the data set on Fresh, Grocery, and Frozen Categories. On the other hand, he has consumed less than $50\%$ in the other categories. On Detergents and Paper, he has spent around $25\%$. This cluster could includes costumers like restaurants, for instance. The \textit{average customer} of Segment $1$ has consumed well above $75\%$ on Milk and Grocery and has spent around $25\%$ of the dataset on Frozen category. It could include costumers like coffee shops and grocery stores.
 
-Looking at the predictions for each sample point, the segmentation performed is not entirely consistent with what I have thought. When I analyzed the Figure \ref{fig:boxplot}, I have mentioned that the sample points $1$ could be a hotel, the sample point $271$ might be a coffee shop and the $413$, a small grocery store. So, if I follow up my previous interpretations, these data point should be assign to the clusters $\{ 0, 1, 1\}$, but it turned out being assign to the segments $\{ 1, 0, 0\}$. The side of the data points is correct, but my previous statements might be inaccurate.
+Looking at the predictions for each sample point, the segmentation performed is consistent with what I have thought. 
+
+When I analyzed the Figure \ref{fig:boxplot}, I have mentioned that the sample points $1$ spent well above the median in \textit{Milk}, \textit{Grocery} and \textit{Detergents\_Paper} categories. It would make this sample point match the Cluster $1$ center. The sample point $271$ match Cluster $0$, as it spent well below the median in \textit{Detergents\_Paper} category, the primary driver of this Segment. Finally, the $413$ also match the Cluster $0$, as it is high \textit{Frozen} and low in \textit{Fresh}, that is the opposite of the mains drivers of the Segment $1$. So, these data points should be assign to the clusters $\{ 1, 0, 0\}$, as the algorithm has assigned.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CONCLUSION
@@ -426,7 +428,7 @@ The K-means successfully identified the number of the main categories in the dat
 
 \section{Reflection}
 \label{sec:reflection}
-Although my interpretation of the clusters was not entirely correct, the way the cluster algorithm has split the data makes sense. Even so, given that the dataset is not clearly separable, would be interesting to see how a soft clustering assignment would have performed. Nevertheless, for the purpose of this project, the segmentation found would be useful to best structure the delivery service of the wholesale distributor.
+Given that the dataset is not clearly separable, would be interesting to see how a soft clustering assignment would have performed. Nevertheless, for the purpose of this project, the segmentation found would be useful to best structure the delivery service of the wholesale distributor.
 
 
 
